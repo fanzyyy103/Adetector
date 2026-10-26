@@ -1,0 +1,9 @@
+# secrets and course data must never be committed (this repo is public)
+.env
+*.env
+data/
+*.csv
+*.parquet
+stage_a_out/
+.ipynb_checkpoints/
+__pycache__/
