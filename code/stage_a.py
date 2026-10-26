@@ -1,5 +1,5 @@
 # Stage A: reproduce the lecture result, then look at the confirmed insiders vs everyone else.
-# Uses only data/wallet_features.csv (no database, no passwords). In VS Code each "# %%" is a runnable cell.
+# Uses only data/wallet_features.csv in the repo root (no database, no passwords). In VS Code each "# %%" is a runnable cell.
 
 # %% 0. Setup
 import numpy as np, pandas as pd, matplotlib.pyplot as plt
@@ -7,8 +7,13 @@ from pathlib import Path
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import roc_auc_score
 
-DATA = Path("data/wallet_features.csv")      # change if your CSV lives elsewhere
-OUT = Path("stage_a_out"); OUT.mkdir(exist_ok=True)
+ROOT = Path(__file__).resolve().parent.parent if "__file__" in globals() else Path.cwd()   # repo root
+if not (ROOT / "data").exists() and (ROOT.parent / "data").exists():                        # cell run from code/
+    ROOT = ROOT.parent
+DATA = ROOT / "data" / "wallet_features.csv"   # put the course CSV here (the data/ folder is git-ignored)
+OUT = ROOT / "stage_a_out"; OUT.mkdir(exist_ok=True)
+if not DATA.exists():
+    raise SystemExit(f"Missing {DATA}. Copy wallet_features.csv from the course materials into the data/ folder.")
 FEATS = ["position_anomaly_ratio", "market_notional_ratio", "avg_buy_price",
          "concentration", "wallet_age_days", "unique_markets"]
 ALL = FEATS + ["trade_count", "total_notional"]
